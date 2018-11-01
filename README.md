@@ -7,6 +7,10 @@ and contains the [PyTorch](https://pytorch.org) source code to
 reproduce the experiments in our NIPS 2018 paper
 [Differentiable MPC for End-to-end Planning and Control](https://arxiv.org/abs/1810.13400).
 
+The PyTorch implementation of the fast and differentiable MPC solver
+we developed for this work is available as a standalone library at
+[locuslab/mpc.pytorch](https://locuslab.github.io/mpc.pytorch/).
+
 If you find this repository helpful in your publications,
 please consider citing our paper.
 
@@ -22,6 +26,7 @@ please consider citing our paper.
 ## Setup and Dependencies
 
 + Python/numpy/[PyTorch](https://pytorch.org)
++ [locuslab/mpc.pytorch](https://github.com/locuslab/mpc.pytorch)
 
 # LQR Imitation Learning Experiments
 
