@@ -28,7 +28,8 @@ def main():
 
     exp_dir = os.path.join(SCRIPT_DIR, 'work', 'n_state=3.n_ctrl=3.T=5')
 
-    im_data, mse_data = [], []
+    fig, ax = plt.subplots(figsize=(6,3))
+
     for seed in os.listdir(exp_dir):
         fname = os.path.join(exp_dir, seed, 'losses.csv')
         if os.path.exists(fname):
@@ -36,29 +37,14 @@ def main():
 
             y = df['im_loss']
             y = np.convolve(y, np.full(N, 1./N), mode='valid')
-            im_data.append(y)
+            x = np.arange(len(y))+N
 
-            y = df['mse']
-            y = np.convolve(y, np.full(N, 1./N), mode='valid')
-            mse_data.append(y)
-
-    min_len = min(map(len, im_data))
-    im_data = np.stack([d[:min_len] for d in im_data])
-    mse_data = np.stack([d[:min_len] for d in mse_data])
-
-    fig, ax = plt.subplots(figsize=(6,3))
-    mean = im_data.mean(axis=0)
-    std = im_data.std(axis=0)
-    x = np.arange(len(mean))+N
-    l, = ax.plot(x, mean)
-    ax.fill_between(x, mean-std, mean+std, color=l.get_color(), alpha=0.5)
+            ax.plot(x, y)
 
     ax.set_xlabel('Iteration')
-    ax.set_xlim(N, 1000)
-    ax.set_xscale('log')
-    ax.set_ylim(1e-4, 1e0)
+    ax.set_ylim((0., None))
+    ax.set_xlim((0., 1000.))
     ax.set_ylabel('Imitation Loss')
-    ax.set_yscale('log')
 
     fig.tight_layout()
     for ext in ['png', 'pdf']:
@@ -67,18 +53,26 @@ def main():
         print('Saving to: {}'.format(fname))
 
     fig, ax = plt.subplots(figsize=(6,3))
-    mean = mse_data.mean(axis=0)
-    std = mse_data.std(axis=0)
-    x = np.arange(len(mean))+N
-    l, = ax.plot(x, mean)
-    ax.fill_between(x, mean-std, mean+std, color=l.get_color(), alpha=0.5)
+
+    for seed in os.listdir(exp_dir):
+        fname = os.path.join(exp_dir, seed, 'losses.csv')
+        if os.path.exists(fname):
+            df = pd.read_csv(fname)
+
+            y = df['mse']
+            y = np.convolve(y, np.full(N, 1./N), mode='valid')
+            x = np.arange(len(y))+N
+
+            ax.plot(x, y)
 
     ax.set_xlabel('Iteration')
-    ax.set_xlim(N, 1000)
-    ax.set_xscale('log')
-    ax.set_ylim(1e-5, 1e1)
+    ax.set_ylim((0., 3.))
+    ax.set_xlim((0., 1000.))
+    # ax.set_xlim(N, 1000)
+    # ax.set_xscale('log')
+    # ax.set_ylim(1e-5, 1e1)
     ax.set_ylabel('Model Loss')
-    ax.set_yscale('log')
+    # ax.set_yscale('log')
 
     fig.tight_layout()
     for ext in ['png', 'pdf']:
