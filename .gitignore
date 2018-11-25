@@ -1,6 +1,8 @@
 .ipynb_checkpoints
 __pycache__
-work
+
+data
+work*
 
 *.pdf
 *.png
